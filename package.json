@@ -1,0 +1,286 @@
+{
+  "name": "envhue",
+  "displayName": "Envhue – Never Mistake PROD for DEV",
+  "description": "Color and protect your VS Code windows by environment (DEV, TEST, PREPROD, PROD): colors, window title, confirmation and optional read-only mode for local, SSH, WSL and Dev Container folders.",
+  "version": "0.1.0",
+  "publisher": "Jean-Christophelejeune",
+  "icon": "images/icon.png",
+  "galleryBanner": {
+    "color": "#000000",
+    "theme": "dark"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JCLejeune71/Envhue.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JCLejeune71/Envhue/issues"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "environment",
+    "ssh",
+    "wsl",
+    "dev-containers",
+    "workspace",
+    "devops",
+    "production",
+    "prod",
+    "remote",
+    "window color",
+    "read-only",
+    "color",
+    "peacock",
+    "project-manager"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "extensionKind": [
+    "ui"
+  ],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "envhue",
+          "title": "Envhue",
+          "icon": "images/activity-bar.svg"
+        }
+      ]
+    },
+    "views": {
+      "envhue": [
+        {
+          "id": "envhue.panel",
+          "name": "Environment"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "envhue.addEnvironment",
+          "when": "view == envhue.panel",
+          "group": "navigation@1"
+        },
+        {
+          "command": "envhue.importProjects",
+          "when": "view == envhue.panel",
+          "group": "navigation@2"
+        },
+        {
+          "command": "envhue.manageEnvironments",
+          "when": "view == envhue.panel",
+          "group": "navigation@3"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "envhue.selectEnvironment",
+        "title": "Envhue: Select Environment"
+      },
+      {
+        "command": "envhue.manageEnvironments",
+        "title": "Envhue: Manage Environments",
+        "icon": "$(settings-gear)"
+      },
+      {
+        "command": "envhue.addEnvironment",
+        "title": "Envhue: Add Environment",
+        "icon": "$(add)"
+      },
+      {
+        "command": "envhue.importProjects",
+        "title": "Envhue: Import from Project Manager and Peacock",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "envhue.showCurrentEnvironment",
+        "title": "Envhue: Show Current Environment"
+      },
+      {
+        "command": "envhue.applyColors",
+        "title": "Envhue: Apply Colors to This Workspace"
+      },
+      {
+        "command": "envhue.editColors",
+        "title": "Envhue: Change Colors of the Current Environment"
+      },
+      {
+        "command": "envhue.showLog",
+        "title": "Envhue: Show Log"
+      },
+      {
+        "command": "envhue.editCurrentEnvironment",
+        "title": "Envhue: Edit Current Environment"
+      },
+      {
+        "command": "envhue.toggleReadOnly",
+        "title": "Envhue: Toggle Read-Only Mode"
+      },
+      {
+        "command": "envhue.resetAllColors",
+        "title": "Envhue: Reset Colors in All Environments"
+      },
+      {
+        "command": "envhue.resetColors",
+        "title": "Envhue: Reset Colors and Read-Only Lock"
+      }
+    ],
+    "configuration": {
+      "title": "Envhue",
+      "properties": {
+        "envhue.showOnStartup": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show the environment picker when VS Code starts."
+        },
+        "envhue.autoApplyColors": {
+          "type": "boolean",
+          "default": true,
+          "description": "Apply the colors of the registered environment automatically whenever its folder is open, however it was opened."
+        },
+        "envhue.tintBackgrounds": {
+          "type": "boolean",
+          "default": true,
+          "description": "Also tint the editor, side bar, panel and terminal backgrounds. Turn off to color only the title bar, activity bar and status bar (recommended with light themes)."
+        },
+        "envhue.windowTitlePrefix": {
+          "type": "boolean",
+          "default": true,
+          "description": "Prefix the window title with the environment type, for example \"[PROD]\". It also appears in the taskbar and is useful for color-blind users."
+        },
+        "envhue.detectProduction": {
+          "type": "boolean",
+          "default": true,
+          "description": "Offer to register an open folder as PROD when it is not registered but its host, folder or name contains the word \"prod\" (or \"production\")."
+        },
+        "envhue.terminalAlert": {
+          "type": "boolean",
+          "default": true,
+          "description": "Warn when a command that looks like it changes files, services or data runs in the terminal of a read-only environment. Read-only mode does not cover the terminal, and this alert cannot stop the command. Needs VS Code 1.93+ with terminal shell integration."
+        },
+        "envhue.openRemoteInNewWindow": {
+          "type": "boolean",
+          "default": true,
+          "description": "Open SSH, WSL and Dev Container environments in a new window, so that a failed connection (for example a cancelled password prompt) never replaces the current window."
+        },
+        "envhue.openInNewWindow": {
+          "type": "boolean",
+          "default": false,
+          "description": "Open the selected environment in a new window instead of replacing the current one."
+        },
+        "envhue.environments": {
+          "type": "array",
+          "default": [],
+          "description": "Environment definitions. Only name, path and type are required; colors are derived from the accent when omitted.",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "path"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Optional. A stable id is generated when omitted."
+              },
+              "name": {
+                "type": "string"
+              },
+              "client": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "DEV",
+                  "TEST",
+                  "PREPROD",
+                  "PROD",
+                  "CUSTOM"
+                ]
+              },
+              "connection": {
+                "type": "string",
+                "enum": [
+                  "local",
+                  "ssh",
+                  "wsl",
+                  "devcontainer"
+                ],
+                "default": "local",
+                "description": "local: a folder on this machine. ssh: a folder reached through Remote - SSH (set \"server\"). wsl: a folder in a WSL distribution (set \"distro\"). devcontainer: a local folder reopened in its dev container."
+              },
+              "path": {
+                "type": "string"
+              },
+              "server": {
+                "type": "string",
+                "description": "SSH host or alias known to Remote - SSH."
+              },
+              "distro": {
+                "type": "string",
+                "description": "WSL distribution name, for example \"Ubuntu\" (connection \"wsl\")."
+              },
+              "colors": {
+                "type": "object",
+                "properties": {
+                  "accent": {
+                    "type": "string",
+                    "pattern": "^#?([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$"
+                  },
+                  "background": {
+                    "type": "string",
+                    "pattern": "^#?([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$"
+                  },
+                  "sidebar": {
+                    "type": "string",
+                    "pattern": "^#?([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$"
+                  },
+                  "text": {
+                    "type": "string",
+                    "pattern": "^#?([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$",
+                    "description": "Text drawn on the accent color. Chosen automatically (black or white) when omitted."
+                  }
+                }
+              },
+              "requireConfirmation": {
+                "type": "boolean"
+              },
+              "readOnly": {
+                "type": "boolean",
+                "default": false,
+                "description": "Open this environment in read-only mode: files are locked in the editor and Explorer until you unlock them for the session (Envhue: Toggle Read-Only Mode). A reminder stays visible in the status bar and the window title. The terminal is not affected."
+              },
+              "favorite": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "npm run compile && node --test out/test/colors.test.js out/test/normalize.test.js out/test/sshConfig.test.js out/test/connections.test.js out/test/projectImport.test.js out/test/cleanup.test.js out/test/panel.test.js out/test/equal.test.js out/test/groups.test.js",
+    "vscode:prepublish": "npm run compile",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.3.3"
+  }
+}

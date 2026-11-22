@@ -1,0 +1,17 @@
+.gitignore
+.git/**
+.vscode/**
+.vscode-test/**
+src/**
+tsconfig.json
+**/*.map
+**/*.ts
+out/test/**
+node_modules/**
+package-lock.json
+*.vsix
+media/**
+
+tools/**
+LICENSE-DRAFT.md
+media/**
