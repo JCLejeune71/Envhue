@@ -64,7 +64,7 @@ export async function selectEnvironment(
     }
   }
 
-  // Pro: environments grouped under their client.
+  // Environments grouped under their client.
   let listed: PickerItem[] = environmentItems;
 
   if (environments.some((item) => item.client)) {

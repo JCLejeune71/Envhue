@@ -18,7 +18,7 @@ type StartEvent = (listener: (event: ShellExecutionStart) => void) => vscode.Dis
 const MIN_GAP_MS = 10_000;
 
 /**
- * Pro: warns when a command that looks like it changes something starts in a
+ * Warns when a command that looks like it changes something starts in a
  * terminal of a locked environment. Read-only mode does not cover the
  * terminal, and this cannot stop the command: it only says so.
  */

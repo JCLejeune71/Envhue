@@ -61,7 +61,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       setSessionLock(id, locked);
     };
 
-    // Pro: an unlock that ends by itself.
+    // An unlock that ends by itself.
     const relock = async (id: string): Promise<void> => {
       clearRelock(id);
       setSessionLock(id, true);
@@ -522,7 +522,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
           }
         }
 
-        // Pro: choose how long the unlock lasts.
+        // Choose how long the unlock lasts.
         let unlockMinutes: number | undefined;
 
         if (wasLocked ) {

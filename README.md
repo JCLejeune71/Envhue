@@ -29,7 +29,8 @@ It combines the idea of a project switcher with workspace coloring, built around
 - **Non-destructive**: your other `workbench.colorCustomizations` (including per-theme blocks) are preserved, and `Envhue: Reset Colors and Read-Only Lock` removes only what Envhue wrote.
 - **Favorites, client grouping** (the `client` field) and an optional list of recommended extensions per environment.
 - **No telemetry and no account.**
-- **Free edition: up to 4 environments**, enough for DEV, TEST, PREPROD and PROD of one client. Existing environments are never removed or locked.
+- **Temporary unlock**: unlock a read-only environment for 5 minutes, 15 minutes, an hour or the session; it locks itself again.
+- **Terminal alert**: a warning when a command that looks like it changes things runs in the terminal of a locked environment.
 
 ## Getting started
 
@@ -40,12 +41,6 @@ It combines the idea of a project switcher with workspace coloring, built around
 For SSH environments, install the official **Remote - SSH** extension. `server` must be a host or alias known to it (for example an entry of your `~/.ssh/config`). Envhue runs as a UI extension and does not need to be installed on the remote host.
 
 For WSL environments, install the **WSL** extension (or **Remote Development**); for Dev Container environments, the **Dev Containers** extension. A Dev Container environment points at the local folder that holds the `.devcontainer` configuration. Envhue opens it, then asks the Dev Containers extension to reopen it in the container.
-
-## Free and Pro
-
-The core is free: environments (local, SSH, WSL, Dev Container), colors, window title, confirmation, read-only mode, production detection, import, side panel. The Free edition holds up to four environments.
-
-Pro modules are unlocked with a license key (`Envhue: Enter License Key`). Today they are: unlimited environments; temporary unlock (the lock comes back by itself after a duration you choose); the picker grouped by client; and a terminal alert (a warning when a command that looks like it changes things runs in a locked environment — read-only mode does not cover the terminal, and the alert cannot stop the command; it needs VS Code 1.93+ with shell integration). License keys are not on sale yet. Without a key, or when a key expires, Envhue keeps working as the Free edition and your environments are never removed.
 
 ## Commands
 
@@ -59,8 +54,6 @@ Pro modules are unlocked with a license key (`Envhue: Enter License Key`). Today
 | `Envhue: Show Current Environment` | Display the active workspace identity |
 | `Envhue: Change Colors of the Current Environment` | Pick a new accent color (presets or hexadecimal) and apply it immediately. Also available from the status bar item |
 | `Envhue: Apply Colors to This Workspace` | Re-apply the colors of the current environment |
-| `Envhue: Show License and Plan` | See your plan, enter or remove a license key |
-| `Envhue: Enter License Key` | Activate a Pro key |
 | `Envhue: Toggle Read-Only Mode` | Lock or unlock the current environment for this session. Also available from the status bar item |
 | `Envhue: Reset Colors in All Environments` | Remove what Envhue wrote from every registered folder. Run it **before uninstalling** the extension |
 | `Envhue: Reset Colors and Read-Only Lock` | Remove the colors, title and read-only lock written by Envhue |
@@ -74,7 +67,7 @@ Pro modules are unlocked with a license key (`Envhue: Enter License Key`). Today
 | `envhue.tintBackgrounds` | `true` | Also tint editor, side bar, panel and terminal. Turn off to color only the bars (recommended with light themes) |
 | `envhue.windowTitlePrefix` | `true` | Prefix the window title with the environment type |
 | `envhue.detectProduction` | `true` | Offer to register unregistered folders that look like production |
-| `envhue.terminalAlert` | `true` | Pro. Warn about commands that look like they change things in a locked environment's terminal |
+| `envhue.terminalAlert` | `true` | Warn about commands that look like they change things in a locked environment's terminal |
 | `envhue.openRemoteInNewWindow` | `true` | Open SSH, WSL and Dev Container environments in a new window, so a failed connection never replaces your current window |
 | `envhue.openInNewWindow` | `false` | Open the selected environment in a new window |
 | `envhue.showOnStartup` | `false` | Show the picker when VS Code starts |
@@ -144,6 +137,10 @@ Do not store passwords, private keys or tokens in environment definitions.
 - [x] Read-only mode for PROD (opt-in)
 - [x] Import from Project Manager and Peacock
 
+## Why this exists
+
+Working on several environments at once, the most expensive mistake is acting on production while believing you are on DEV. VS Code gives no strong signal about where you are. Envhue makes the environment impossible to miss (colors, window title, status bar), asks before opening the sensitive ones, and can lock files until you decide otherwise. It is a safety net against human error, not a security control: see "Good to know" for what it does not protect against, and [SECURITY.md](SECURITY.md) for the threat model.
+
 ## License
 
-MIT. See the LICENSE file.
+MIT. See the [LICENSE](LICENSE) file.

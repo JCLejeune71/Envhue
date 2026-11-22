@@ -1,0 +1,40 @@
+name: Release
+
+# Push a tag such as v0.1.0 to build the extension, attach the .vsix to a
+# GitHub release and, if a VSCE_PAT secret exists, publish it to the Marketplace.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      VSCE_PAT: ${{ secrets.VSCE_PAT }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Check that the tag matches package.json
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match package.json version $version" >&2
+            exit 1
+          fi
+      - run: npm test
+      - name: Build the .vsix
+        run: npx --yes @vscode/vsce@4.1.1 package --no-dependencies -o envhue-${GITHUB_REF_NAME#v}.vsix
+      - name: Create the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" envhue-*.vsix --title "$GITHUB_REF_NAME" --notes-file CHANGELOG.md
+      - name: Publish to the Marketplace
+        if: env.VSCE_PAT != ''
+        run: npx --yes @vscode/vsce@4.1.1 publish --packagePath envhue-*.vsix
